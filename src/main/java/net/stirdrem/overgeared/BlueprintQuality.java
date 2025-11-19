@@ -1,4 +1,3 @@
-/*
 package net.stirdrem.overgeared;
 
 import net.minecraft.ChatFormatting;
@@ -27,53 +26,6 @@ public enum BlueprintQuality {
         return Integer.compare(a.ordinal(), b.ordinal());
     }
 
-    */
-/**
-     * Match a quality string safely.
-     *//*
-
-    public static BlueprintQuality fromString(String id) {
-        for (BlueprintQuality q : values()) {
-            if (q.id.equalsIgnoreCase(id)) return q;
-        }
-        return POOR; // fallback
-    }
-
-    */
-/**
-     * Get the next tier of blueprint quality.
-     *//*
-
-    public static BlueprintQuality getNext(BlueprintQuality current) {
-        int index = current.ordinal();
-        if (index + 1 < values().length) {
-            return values()[index + 1];
-        }
-        return null; // Already at max
-    }
-
-    */
-/**
-     * Get the previous tier of blueprint quality.
-     *//*
-
-    public static BlueprintQuality getPrevious(BlueprintQuality current) {
-        int index = current.ordinal();
-        if (index - 1 >= 0) {
-            return values()[index - 1];
-        }
-        return null; // Already at lowest
-    }
-
-    public static ChatFormatting getColor(String qualityName) {
-        for (BlueprintQuality q : values()) {
-            if (q.name().equalsIgnoreCase(qualityName)) {
-                return q.color; // assuming the color field exists in your enum
-            }
-        }
-        return ChatFormatting.GRAY;
-    }
-
     public String getDisplayName() {
         return id;
     }
@@ -90,9 +42,39 @@ public enum BlueprintQuality {
         return "tooltip.overgeared.blueprint.quality." + name().toLowerCase();
     }
 
+    /**
+     * Match a quality string safely.
+     */
+    public static BlueprintQuality fromString(String id) {
+        for (BlueprintQuality q : values()) {
+            if (q.id.equalsIgnoreCase(id)) return q;
+        }
+        return POOR; // fallback
+    }
+
+    /**
+     * Get the next tier of blueprint quality.
+     */
+    public static BlueprintQuality getNext(BlueprintQuality current) {
+        int index = current.ordinal();
+        if (index + 1 < values().length) {
+            return values()[index + 1];
+        }
+        return null; // Already at max
+    }
+
+    /**
+     * Get the previous tier of blueprint quality.
+     */
+    public static BlueprintQuality getPrevious(BlueprintQuality current) {
+        int index = current.ordinal();
+        if (index - 1 >= 0) {
+            return values()[index - 1];
+        }
+        return null; // Already at lowest
+    }
+
     public String getId() {
         return id;
     }
-
 }
-*/

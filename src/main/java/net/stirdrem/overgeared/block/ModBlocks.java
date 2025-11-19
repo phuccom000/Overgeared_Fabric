@@ -1,50 +1,71 @@
 package net.stirdrem.overgeared.block;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ExperienceDroppingBlock;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.stirdrem.overgeared.Overgeared;
+import io.github.fabricators_of_create.porting_lib.util.LazyRegistrar;
+import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.stirdrem.overgeared.AnvilTier;
+import net.stirdrem.overgeared.OvergearedMod;
+import net.stirdrem.overgeared.block.custom.*;
+//import net.stirdrem.overgeared.block.custom.LayeredWaterBarrel;
+//import net.stirdrem.overgeared.block.custom.WaterBarrel;
+//import net.stirdrem.overgeared.core.waterbarrel.BarrelInteraction;
+import net.stirdrem.overgeared.item.ModItems;
+
+import java.util.function.Supplier;
 
 public class ModBlocks {
-    public static final Block RUBY_BLOCK = registerBlock("ruby_block",
-            new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.AMETHYST_BLOCK)));
-    public static final Block RAW_RUBY_BLOCK = registerBlock("raw_ruby_block",
-            new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+    private BlockState defaultBlockState;
 
-    public static final Block SMITHING_ANVIL = registerBlock("smithing_anvil",
-            new Block(FabricBlockSettings.copyOf(Blocks.ANVIL)));
+    public static final LazyRegistrar<Block> BLOCKS =
+            LazyRegistrar.create(BuiltInRegistries.BLOCK, OvergearedMod.MOD_ID);
 
-    public static final Block RUBY_ORE = registerBlock("ruby_ore",
-            new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.STONE).strength(2f), UniformIntProvider.create(2, 5)));
-    public static final Block DEEPSLATE_RUBY_ORE = registerBlock("deepslate_ruby_ore",
-            new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.DEEPSLATE).strength(4f), UniformIntProvider.create(2, 5)));
-    public static final Block NETHER_RUBY_ORE = registerBlock("nether_ruby_ore",
-            new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.NETHERRACK).strength(1.5f), UniformIntProvider.create(2, 5)));
-    public static final Block END_STONE_RUBY_ORE = registerBlock("end_stone_ruby_ore",
-            new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.END_STONE).strength(4f), UniformIntProvider.create(4, 7)));
+    public static final RegistryObject<Block> SMITHING_ANVIL = registerBlock("smithing_anvil",
+            () -> new SteelSmithingAnvil(AnvilTier.IRON, BlockBehaviour.Properties.copy(Blocks.ANVIL).noOcclusion()));
+    public static final RegistryObject<Block> TIER_A_SMITHING_ANVIL = registerBlock("tier_a_smithing_anvil",
+            () -> new TierASmithingAnvil(AnvilTier.ABOVE_A, BlockBehaviour.Properties.copy(Blocks.ANVIL).noOcclusion()));
+    public static final RegistryObject<Block> TIER_B_SMITHING_ANVIL = registerBlock("tier_b_smithing_anvil",
+            () -> new TierBSmithingAnvil(AnvilTier.ABOVE_B, BlockBehaviour.Properties.copy(Blocks.ANVIL).noOcclusion()));
 
+    public static final RegistryObject<Block> STONE_SMITHING_ANVIL = registerBlock("stone_anvil",
+            () -> new StoneSmithingAnvil(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()));
 
+    public static final RegistryObject<Block> STEEL_BLOCK = registerBlock("steel_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
 
-    private static Block registerBlock(String name, Block block) {
-        registerBlockItem(name, block);
-        return Registry.register(Registries.BLOCK, new Identifier(Overgeared.MOD_ID, name), block);
+    public static final RegistryObject<Block> DRAFTING_TABLE = registerBlock("drafting_table",
+            () -> new BlueprintWorkbenchBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)));
+
+    /*public static final RegistryObject<Block> SMITHING_ANVIL_TEST = registerBlock("smithing_anvil_test",
+            () -> new CounterBlock(BlockBehaviour.Properties.copy(Blocks.ANVIL).noOcclusion()));*/
+
+    /*public static final RegistryObject<Block> ROCK = registerBlock("rock",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.DEAD_BUSH).sound(SoundType.STONE)));*/
+
+    /* public static final RegistryObject<Block> WATER_BARREL = registerBlock("water_barrel",
+             () -> new WaterBarrel(BlockBehaviour.Properties.copy(Blocks.BARREL).noOcclusion()));
+     public static final RegistryObject<Block> WATER_BARREL_FULL = registerBlock("water_barrel_full",
+             () -> new LayeredWaterBarrel(BlockBehaviour.Properties.copy(Blocks.BARREL).noOcclusion(), LayeredCauldronBlock.RAIN, BarrelInteraction.WATER));
+     *//*public static final RegistryObject<Block> WATER_BARREL_FULL = registerBlock("water_barrel_full",
+            () -> new WaterBarrel(BlockBehaviour.Properties.copy(Blocks.BARREL).requiresCorrectToolForDrops().strength(2.0F).noOcclusion()));*//*
+     */
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
+        RegistryObject<T> toReturn = BLOCKS.register(name, block);
+        registerBlockItem(name, toReturn);
+        return toReturn;
     }
 
-    private static Item registerBlockItem(String name, Block block) {
-        return Registry.register(Registries.ITEM, new Identifier(Overgeared.MOD_ID, name),
-                new BlockItem(block, new FabricItemSettings()));
+    private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
+        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
-    public static void registerModBlocks() {
-        Overgeared.LOGGER.info("Registering ModBlocks for " + Overgeared.MOD_ID);
+    public final BlockState defaultBlockState() {
+        return this.defaultBlockState;
     }
+
 }

@@ -21,6 +21,7 @@
   "block.overgeared.drafting_table": "Drafting Table",
   "block.overgeared.alloy_furnace": "Alloy Furnace",
   "block.overgeared.nether_alloy_furnace": "Nether Alloy Furnace",
+  "creativetab.overgeared_tab": "Overgeared",
   "gui.overgeared.remaining_hits": "Hits Left: %s",
   "gui.overgeared.smithing_anvil": "Forging",
   "gui.overgeared.rock_knapping": "Knapping",
@@ -266,7 +267,6 @@
   "gui.overgeared.jei.category.nether_alloy_smelting": "Nether Alloying",
   "gui.overgeared.jei.category.cooling": "Water Cooling",
   "gui.overgeared.jei.category.grinding": "Grinding",
-  "tooltip.overgeared.add_materials": "Pick up the materials and right-click on the cast to add",
-  "itemgroup.overgeared": "Overgeared"
+  "tooltip.overgeared.add_materials": "Pick up the materials and right-click on the cast to add"
 }
 

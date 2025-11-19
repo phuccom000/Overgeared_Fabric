@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.stirdrem.overgeared.Overgeared"
+			"net.stirdrem.overgeared.OvergearedMod"
 		],
 		"client": [
 			"net.stirdrem.overgeared.OvergearedClient"

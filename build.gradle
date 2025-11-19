@@ -11,11 +11,62 @@ base {
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+	mavenLocal()
+	maven {
+		// location of a maven mirror for JEI files, as a fallback
+		name = "ModMaven"
+		url = "https://modmaven.dev"
+	}
+	maven {
+		name = "CurseForge"
+		url = "https://minecraft.curseforge.com/api/maven/"
+	}
+	maven {
+		name = "CurseMaven"
+		url = "https://www.cursemaven.com"
+	}
+	maven {
+		name = "Parchment"
+		url = 'https://maven.parchmentmc.org'
+	}
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/"
+	}
+
+	maven { url "https://maven.architectury.dev/" }
+
+	maven {
+		name = "Fuzs Mod Resources"
+		url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+	}
+
+	maven {
+		name = "DevOS One"
+		url = "https://mvn.devos.one/releases/"
+	}
+
+	maven {
+		name = "Cafeteria Dev"
+		url = "https://maven.cafeteria.dev/releases/"
+	}
+
+	maven {
+		name = "JamiesWhiteShirt Dev"
+		url = "https://maven.jamieswhiteshirt.com/libs-release"
+		content {
+			includeGroup("com.jamieswhiteshirt")
+		}
+	}
+
+	maven {
+		//maven for all github project releases
+		url "https://jitpack.io"
+	}
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/${project.archives_base_name}.accesswidener")
 }
 
 fabricApi {
@@ -27,12 +78,20 @@ fabricApi {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${parchment_version}@zip")
+	}
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
+	def portingLibs = ["asm", "accessors", "attributes", "base", "client_events", "common", "core", "config", "data", "entity", "extensions", "items", "mixin_extensions", "networking", "utility", "loot", "registries" ]
+	for (lib in portingLibs) {
+		modImplementation(include("io.github.fabricators_of_create.Porting-Lib:$lib:${property("porting_lib_version")}"))
+	}
+
 }
 
 processResources {
